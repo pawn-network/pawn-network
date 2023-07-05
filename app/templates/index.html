@@ -15,7 +15,7 @@
             <div class="buttons-interaction-index">
                 <div class="button-interaction-index">
                     <div class="toggle-modenoturn">
-                        <span class="material-symbols-outlined">
+                        <span class="material-symbols-outlined" id="manage_noturnmode" onclick="ToggleModeNoturn()">
                             dark_mode
                         </span>
                     </div>
@@ -55,5 +55,6 @@
             <p>&copy; 2023 Social Network. All rights reserved.</p>
         </div>
     </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

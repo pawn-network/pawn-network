@@ -15,7 +15,9 @@
             </div>
             <div class="buttons-interaction-dashboard">
                 <div class="button-interaction-dashboard">
-                    <span class="material-symbols-outlined" id="manage_noturnmode">dark_mode</span>
+                    <span class="material-symbols-outlined" id="manage_noturnmode" onclick="ToggleModeNoturn()">
+                        dark_mode
+                    </span>
                     <button class="publish-button"><a href="{{ url_for('new_post') }}">+</a></button>
                     <span class="material-symbols-outlined" id="manage_accounts">manage_accounts</span>
                     <div class="logout-button-dashboard">
