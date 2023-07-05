@@ -54,6 +54,7 @@ a{
 
 .header-index {
   display: flex;
+  align-items: center;
 }
 
 .buttons-interaction-index {
@@ -89,28 +90,19 @@ a{
 
 .toggle-modenoturn{
   margin-top: 1vh;
-  font-size: 2.5vh;
-}
-
-.toggle-modenoturn span{
-  font-size: 2.7vh;
 }
 
 /*---------------------------------------------------*/
 
 .header-login{
   display: flex;
+  align-items: center;
 }
 
 .toggle-modenoturn-login{
   margin-top: 1vh;
   font-size: 2.5vh;
   margin-left: 80%;
-}
-
-.toggle-modenoturn-login span{
-  font-size: 2.7vh;
-  text-align: end;
 }
 
 .container-login {
@@ -303,7 +295,7 @@ a{
 }
 
 #manage_noturnmode{
-  font-size: 3.8vh;
+  font-size: 2.5vh;
   margin-right: 5vh;
 }
 
@@ -315,6 +307,7 @@ a{
 
 .button-interaction-dashboard{
   display: flex;
+  align-items: center;
 }
 
 .buttons-interaction-dashboard{
@@ -323,7 +316,6 @@ a{
 
 .logout-button-dashboard{
   margin-left: 2vh;
-  margin-top: 1vh;
   font-size: 2vh;
   border-radius: 1vh;
   border: none;
