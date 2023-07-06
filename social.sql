@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 02-Jul-2023 às 20:22
+-- Tempo de geração: 06-Jul-2023 às 19:48
 -- Versão do servidor: 10.4.24-MariaDB
 -- versão do PHP: 7.4.29
 
@@ -46,7 +46,8 @@ CREATE TABLE `users` (
   `username` varchar(54) NOT NULL,
   `password` varchar(61) NOT NULL,
   `email` varchar(256) NOT NULL,
-  `verified` int(1) NOT NULL DEFAULT 0,
+  `discord` varchar(40) NOT NULL,
+  `verified` int(2) NOT NULL DEFAULT -1,
   `temp_token` varchar(54) NOT NULL DEFAULT 'Null',
   `temp_code` varchar(7) NOT NULL DEFAULT 'Null',
   `time_code` double DEFAULT 0

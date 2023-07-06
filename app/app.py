@@ -65,7 +65,7 @@ def login():
         user = database.cursor.fetchone()
 
         if user:
-            if user[4] == 0:
+            if user[4] == -1:
                 database.close_cursor()
                 return render_template('login.html', error='Você não verificou o seu e-mail ainda.')
     
@@ -114,7 +114,7 @@ def register():
         email_sender = Email()
         hashed_password = security.hash_password(password)
         temp_token = email_sender.generate_token()
-        database.cursor.execute("INSERT INTO users (username, password, email, temp_token) VALUES (%s, %s, %s, %s)", (username, hashed_password, email, temp_token))
+        database.cursor.execute("INSERT INTO users (username, password, email, discord, temp_token) VALUES (%s, %s, %s, %s, %s)", (username, hashed_password, email, discord, temp_token))
         database.connection.commit()
         database.close_cursor()
 
@@ -208,7 +208,7 @@ def confirm_code():
             database.cursor.execute("SELECT * FROM users WHERE username = %s", (username))
             result = database.cursor.fetchone()
 
-            if result[6] == code and result[7] < time.time()+300:
+            if result[7] == code and result[8] < time.time()+300:
                 hashed_password = security.hash_password(password)
                 database.cursor.execute("UPDATE users SET password = %s, temp_code = 'Null', time_code = '0' WHERE username = %s", (hashed_password, username))
                 database.connection.commit()
@@ -232,7 +232,7 @@ def verify_email(username, token):
     database.cursor.execute("SELECT * FROM users WHERE username = %s", (username))
     result = database.cursor.fetchone()
 
-    if result[4] == 1:
+    if result[5] >= 0:
         return redirect('/dashboard')
     
     if email.is_token_valid(token, result[5]):
