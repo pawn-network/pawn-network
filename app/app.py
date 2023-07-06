@@ -4,6 +4,7 @@ from database import Database
 from utils import security
 from libs.PNet.pnpacket import PNPacket
 from libs.PNet.pnclient import PNClient
+from utils import configs
 
 from gmail import Email
 import secrets
@@ -119,7 +120,7 @@ def register():
 
         PACKET_ID_DISCORD_VERIFICATION = 1
         pkt = PNPacket(PACKET_ID_DISCORD_VERIFICATION, username=username, discord=discord)
-        client = PNClient('127.0.0.1', 3030)
+        client = PNClient(configs.bot_ip, configs.bot_port)
         client.send(pkt)
 
         email_sender.send_email('Confirmação de E-mail', f"""
