@@ -7,3 +7,10 @@ def hash_password(password):
 
 def check_password(password, hashed_password):
     return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+def discord_format(texto):
+    if "#" in texto:
+        index = texto.index("#")
+        if len(texto[index+1:]) == 4 and texto[index+1:].isdigit():
+            return True
+    return False

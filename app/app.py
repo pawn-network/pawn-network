@@ -1,11 +1,14 @@
 from flask import Flask, render_template, session, redirect, request
 from itsdangerous import URLSafeTimedSerializer
-import re
-from utils import security
-import secrets
 from database import Database
+from utils import security
+from libs.PNet.pnpacket import PNPacket
+from libs.PNet.pnclient import PNClient
+
 from gmail import Email
+import secrets
 import time
+import re
 
 # Database application setup
 database = Database('localhost', 'root', '', 'social')
@@ -84,39 +87,45 @@ def register():
     if request.method == 'POST':
         email_template = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         email = request.form['email']
-        if re.match(email_template, email):
-            username = request.form['username']
-            password = request.form['password']
-
-            database.connect()
-            database.open_cursor()
-
-            database.cursor.execute("SELECT * FROM users WHERE username = %s OR email = %s", (username, email))
-            existing_user = database.cursor.fetchone()
-
-            if existing_user:
-                error = 'Este nome de usuário ou e-mail já estão registrados.'
-                return render_template('register.html', error=error)
-
-            email_sender = Email()
-            hashed_password = security.hash_password(password)
-            temp_token = email_sender.generate_token()
-            database.cursor.execute("INSERT INTO users (username, password, email, temp_token) VALUES (%s, %s, %s, %s)", (username, hashed_password, email, temp_token))
-            database.connection.commit()
-            database.close_cursor()
-
-            email_sender.send_email('Confirmação de E-mail', f"""
-                <h1>Bem-vindo à comunidade Pawn Network.</h1>
-                <p>Confirme o seu e-mail clicando no botão abaixo:</p>
-                <a href="http://127.0.0.1:5000/verify_email/{username}/{temp_token}" style="color: #fff; text-decoration: none; font-family: Verdana,'Helvetica Neue',HelveticaNeue,Helvetica,Arial,sans-serif; height: 48px; line-height: 48px; border-width: 0; border-radius: 24px; background-color: #303030; display: inline-block; font-size: 16px; margin: 0 auto; font-weight: bold; padding: 0 2rem;">Verificar conta</a>
-                <p>Atenciosamente,</p>
-                <p><strong>Pawn Network.</strong></p>""", email)
-            
-            error = 'Foi enviado um token de verificação em seu email.'
-            return render_template('register.html', error=error)
-        else:
+        if re.match(email_template, email) == False:
             error = 'O e-mail fornecido contém um padrão inválido.'
             return render_template('register.html', error=error)
+        
+        discord = request.form['discord']
+        if security.discord_format(discord) == False:
+            error = 'O discord fornecido contém um formato invalido.'
+            return render_template('register.html', error=error)
+        
+        username = request.form['username']
+        password = request.form['password']
+
+
+        database.connect()
+        database.open_cursor()
+
+        database.cursor.execute("SELECT * FROM users WHERE username = %s OR email = %s", (username, email))
+        existing_user = database.cursor.fetchone()
+
+        if existing_user:
+            error = 'Este nome de usuário ou e-mail já estão registrados.'
+            return render_template('register.html', error=error)
+
+        email_sender = Email()
+        hashed_password = security.hash_password(password)
+        temp_token = email_sender.generate_token()
+        database.cursor.execute("INSERT INTO users (username, password, email, temp_token) VALUES (%s, %s, %s, %s)", (username, hashed_password, email, temp_token))
+        database.connection.commit()
+        database.close_cursor()
+        
+        email_sender.send_email('Confirmação de E-mail', f"""
+            <h1>Bem-vindo à comunidade Pawn Network.</h1>
+            <p>Confirme o seu e-mail clicando no botão abaixo:</p>
+            <a href="http://127.0.0.1:5000/verify_email/{username}/{temp_token}" style="color: #fff; text-decoration: none; font-family: Verdana,'Helvetica Neue',HelveticaNeue,Helvetica,Arial,sans-serif; height: 48px; line-height: 48px; border-width: 0; border-radius: 24px; background-color: #303030; display: inline-block; font-size: 16px; margin: 0 auto; font-weight: bold; padding: 0 2rem;">Verificar conta</a>
+            <p>Atenciosamente,</p>
+            <p><strong>Pawn Network.</strong></p>""", email)
+        
+        error = 'Foi enviado um token de verificação em seu email.'
+        return render_template('register.html', error=error)
     return render_template('register.html')
 
 ## Logout route
