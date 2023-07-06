@@ -12,7 +12,7 @@ import time
 import re
 
 # Database application setup
-database = Database('localhost', 'root', '', 'social')
+database = Database(configs.db_ip, configs.db_user, configs.db_password, configs.db_database)
 
 # Application Instance
 app = Flask(__name__)
