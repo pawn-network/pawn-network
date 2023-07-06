@@ -116,7 +116,12 @@ def register():
         database.cursor.execute("INSERT INTO users (username, password, email, temp_token) VALUES (%s, %s, %s, %s)", (username, hashed_password, email, temp_token))
         database.connection.commit()
         database.close_cursor()
-        
+
+        PACKET_ID_DISCORD_VERIFICATION = 1
+        pkt = PNPacket(PACKET_ID_DISCORD_VERIFICATION, username=username, discord=discord)
+        client = PNClient('127.0.0.1', 3030)
+        client.send(pkt)
+
         email_sender.send_email('Confirmação de E-mail', f"""
             <h1>Bem-vindo à comunidade Pawn Network.</h1>
             <p>Confirme o seu e-mail clicando no botão abaixo:</p>
